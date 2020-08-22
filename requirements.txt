@@ -1,0 +1,9 @@
+numpy
+tensorflow==1.15.2
+scipy
+resampy==0.2.1
+pandas
+keras==2.2.4
+h5py
+typer
+maxfw
