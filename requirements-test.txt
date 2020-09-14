@@ -1,4 +1,0 @@
-pytest
-requests
-flake8
-bandit
