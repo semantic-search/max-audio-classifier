@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from api.tapap import ModelWrapper
+from core.model import ModelWrapper
 from maxfw.core import MAX_API, MetadataAPI, METADATA_SCHEMA
 
 

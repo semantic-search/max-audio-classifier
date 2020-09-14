@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 from maxfw.core import MAXApp
-from classifier import ModelMetadataAPI, ModelPredictAPI
-from classifier.config import API_TITLE, API_DESC, API_VERSION
+from api import ModelMetadataAPI, ModelPredictAPI
+from config import API_TITLE, API_DESC, API_VERSION
 
 max_app = MAXApp(API_TITLE, API_DESC, API_VERSION)
 max_app.add_api(ModelMetadataAPI, '/metadata')

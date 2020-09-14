@@ -13,4 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .tapap import ModelWrapper
+from .metadata import ModelMetadataAPI  # noqa
+from .predict import ModelPredictAPI  # noqa
