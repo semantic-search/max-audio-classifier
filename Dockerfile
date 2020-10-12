@@ -28,5 +28,5 @@ RUN pip install -r requirements.txt
 
 COPY . /workspace
 
-# CMD python app.py
+CMD ["python", "main.py"]
 

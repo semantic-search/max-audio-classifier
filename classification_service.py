@@ -25,7 +25,7 @@ def predict(file_name):
     final_scores = []
 
     [final_labels.append(p[1]) for p in [x for x in preds]]
-    [final_scores.append(p[2]) for p in [x for x in preds]]
+    [final_scores.append(float(p[2])) for p in [x for x in preds]]
 
     # full_res = [{'label': p[1], 'probability': p[2]}
     #                for p in [x for x in preds]]

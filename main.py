@@ -26,7 +26,10 @@ def update_state(file):
         'client_id': globals.CLIENT_ID,
         'value': file
     }
-    requests.request("POST", globals.DASHBOARD_URL,  data=payload)
+    try:
+        requests.request("POST", globals.DASHBOARD_URL,  data=payload)
+    except: 
+        print("EXCEPTION IN UPDATE STATE API CALL......")
 
 
 if __name__ == "__main__":
@@ -37,7 +40,12 @@ if __name__ == "__main__":
         message = message.value
         db_key = str(message)
         print(db_key, 'db_key')
-        db_object = Cache.objects.get(pk=db_key)
+        try:
+            db_object = Cache.objects.get(pk=db_key)
+        except:
+            print("EXCEPTION IN GET PK... continue")
+            continue
+
         file_name = db_object.file_name
         
         print("#############################################")
@@ -47,10 +55,14 @@ if __name__ == "__main__":
        
         with open(file_name, 'wb') as file_to_save:
             file_to_save.write(db_object.file.read())
-        audio_results = predict(file_name)
+        try:
+            audio_results = predict(file_name)
+        except:
+            print("ERROR IN PREDICE")
+            continue
         
         to_save = [audio_results]
         print("to_save audio", to_save)
         save_to_db(db_object, to_save)
         print(".....................FINISHED PROCESSING FILE.....................")
-        # update_state(file_name)
+        update_state(file_name)
