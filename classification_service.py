@@ -13,7 +13,7 @@ def caption(audio):
         print(error, "ERROR")
 
 
-def predict(file_name, doc=False):
+def predict(file_name):
 
     preds = caption(file_name)
 
