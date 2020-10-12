@@ -29,12 +29,6 @@ def update_state(file):
     requests.request("POST", globals.DASHBOARD_URL,  data=payload)
 
 
-def send_to_topic(topic, value_to_send_dic):
-    # default=convert only used in this project
-    data_json = json.dumps(value_to_send_dic)
-    init.producer_obj.send(topic, value=data_json)
-
-
 if __name__ == "__main__":
     print('main fxn')
     print("Connected to Kafka at " + globals.KAFKA_HOSTNAME + ":" + globals.KAFKA_PORT)
@@ -50,35 +44,13 @@ if __name__ == "__main__":
         print("########## PROCESSING FILE " + file_name)
         print("#############################################")
 
-        if db_object.is_doc_type:
-            """document"""
-            if db_object.contains_images:
-                images_array = []
-                for image in db_object.files:
-                    pdf_image = str(uuid.uuid4()) + ".jpg"
-                    with open(pdf_image, 'wb') as file_to_save:
-                        file_to_save.write(image.file.read())
-                    images_array.append(pdf_image)
-                to_save = []
-                for image in images_array:
-                    audio_results = predict(image)
-                    to_save.append(audio_results)
-                print("to_Save in docs", to_save)
-                # save_to_db(db_object, to_save)
-                print(".....................FINISHED PROCESSING FILE.....................")
-                # update_state(file_name)
-            else:
-                pass
-
-        else:
-            """image"""
-            print('in image type')
-            with open(file_name, 'wb') as file_to_save:
-                file_to_save.write(db_object.file.read())
-            audio_results = predict(file_name)
-            
-            to_save = [audio_results]
-            print("to_save img", to_save)
-            # save_to_db(db_object, to_save)
-            print(".....................FINISHED PROCESSING FILE.....................")
-            # update_state(file_name)
+       
+        with open(file_name, 'wb') as file_to_save:
+            file_to_save.write(db_object.file.read())
+        audio_results = predict(file_name)
+        
+        to_save = [audio_results]
+        print("to_save audio", to_save)
+        save_to_db(db_object, to_save)
+        print(".....................FINISHED PROCESSING FILE.....................")
+        # update_state(file_name)

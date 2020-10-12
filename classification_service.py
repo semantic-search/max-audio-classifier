@@ -15,11 +15,25 @@ def caption(audio):
 
 def predict(file_name):
 
-    preds = caption(file_name)
+    with open(file_name, 'rb') as fd:
+        contents = fd.read()
 
-    full_res = [{'label': p[1], 'probability': p[2]}
-                   for p in [x for x in preds]]
+    preds = caption(contents)
+    # print(preds, "preds in service")
+
+    final_labels = []
+    final_scores = []
+
+    [final_labels.append(p[1]) for p in [x for x in preds]]
+    [final_scores.append(p[2]) for p in [x for x in preds]]
+
+    # full_res = [{'label': p[1], 'probability': p[2]}
+    #                for p in [x for x in preds]]
        
     os.remove(file_name)
 
-    return full_res
+    final_result = {
+        "labels": final_labels,
+        "scores": final_scores
+    }
+    return final_result
