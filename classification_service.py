@@ -7,10 +7,10 @@ def caption(audio):
     # Getting the predictions
     try:
         preds = model_wrapper._predict(audio, start_time)
+        return preds
     except ValueError:
         error = {'status': 'error', 'message': 'Invalid start time: value outside audio clip'}
-        print(error)
-    return preds
+        print(error, "ERROR")
 
 
 def predict(file_name, doc=False):
@@ -19,21 +19,7 @@ def predict(file_name, doc=False):
 
     full_res = [{'label': p[1], 'probability': p[2]}
                    for p in [x for x in preds]]
-    text_res = [{'label': p[1]}
-                   for p in [x for x in preds]]
-    if doc:
-        response = {
-            "full_res": full_res,
-            "text_res": text_res
-        }
-    else:
-        response = {
-            "file_name": file_name,
-            "full_res": full_res,
-            "text_res": text_res,
-            "is_doc_type": False
-        }
-        
+       
     os.remove(file_name)
 
-    return response
+    return full_res
