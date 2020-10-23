@@ -1,5 +1,3 @@
-import json
-import uuid
 from db_models.mongo_setup import global_init
 from db_models.models.cache_model import Cache
 from db_models.models.result_model import Result
@@ -10,12 +8,10 @@ import requests
 
 global_init()
 
-def save_to_db(db_object, result_to_save):
+def save_to_db(db_object, to_save):
     print("*****************SAVING TO DB******************************")
-    result_obj = Result()
-    result_obj.results = result_to_save
-    result_obj.model_name = globals.RECEIVE_TOPIC
-    db_object.results.append(result_obj)
+    db_object.labels = db_object.labels.append(to_save["labels"]) 
+    db_object.scores = db_object.scores.append(to_save["scores"])
     db_object.save()
     print("*****************SAVED TO DB******************************")
 
@@ -60,8 +56,7 @@ if __name__ == "__main__":
         except:
             print("ERROR IN PREDICE")
             continue
-        
-        to_save = [audio_results]
+        to_save = audio_results
         print("to_save audio", to_save)
         save_to_db(db_object, to_save)
         print(".....................FINISHED PROCESSING FILE.....................")
