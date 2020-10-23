@@ -10,9 +10,12 @@ global_init()
 
 def save_to_db(db_object, to_save):
     print("*****************SAVING TO DB******************************")
-    db_object.labels = db_object.labels.append(to_save["labels"]) 
-    db_object.scores = db_object.scores.append(to_save["scores"])
-    db_object.save()
+    try:
+        db_object.labels = db_object.labels.append(to_save["labels"]) 
+        db_object.scores = db_object.scores.append(to_save["scores"])
+        db_object.save()
+    except:
+        print("*******************error in save_to_db*********************")
     print("*****************SAVED TO DB******************************")
 
 
