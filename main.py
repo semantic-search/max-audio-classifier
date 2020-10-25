@@ -10,14 +10,14 @@ from init import ERR_LOGGER
 global_init()
 
 FILE_ID = ""
-
-def save_to_db(db_object, result_to_save):
+def save_to_db(db_object, labels, scores):
     try:
         print("*****************SAVING TO DB******************************")
-        if db_object.text:
-            db_object.text = db_object.text + ' ' + result_to_save
-        else:
-            db_object.text = result_to_save
+        print("in save")
+        print(db_object)
+        print(db_object.id)
+        db_object.labels = labels
+        db_object.scores = scores
         db_object.save()
         print("*****************SAVED TO DB******************************")
     except Exception as e:
@@ -55,7 +55,8 @@ if __name__ == "__main__":
             continue
 
         file_name = db_object.file_name
-        
+        final_labels=db_object.labels
+        final_scores=db_object.scores
         print("#############################################")
         print("########## PROCESSING FILE " + file_name)
         print("#############################################")
@@ -64,13 +65,23 @@ if __name__ == "__main__":
         with open(file_name, 'wb') as file_to_save:
             file_to_save.write(db_object.file.read())
         try:
-            audio_results = predict(file_name)
+            response = predict(file_name)
         except Exception as e:
             print("ERROR IN PREDICE")
             ERR_LOGGER(f"{e} Exception in predict FILE ID {FILE_ID}")
             continue
-        to_save = audio_results
-        print("to_save audio", to_save)
-        save_to_db(db_object, to_save)
+
+        for label,score in zip(response["labels"],response['scores']):
+            if label not in final_labels:
+                final_labels.append(label.strip())
+                final_scores.append(score)
+            else:
+                x = final_labels.index(label)
+                score_to_check = final_scores[x]
+                if score > score_to_check:
+                    final_scores[x] = score
+
+        print("to_save audio", final_labels,final_scores)
+        save_to_db(db_object,final_labels,final_scores)
         print(".....................FINISHED PROCESSING FILE.....................")
         update_state(file_name)
