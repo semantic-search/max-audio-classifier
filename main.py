@@ -47,6 +47,7 @@ if __name__ == "__main__":
         message = message.value
         db_key = str(message)
         print(db_key, 'db_key')
+        FILE_ID = db_key
         try:
             db_object = Cache.objects.get(pk=db_key)
         except Exception as e:
